@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc -b && vite build",
-    "test:no-watch": "vitest --watch=false",
     "test": "vitest",
+    "test:no-watch": "vitest --watch=false",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",
-    "pre-commit": "npm run lint && npm run test:no-watch"
+    "pre-commit": "npm run lint && npm run test:no-watch && npm run test:coverage"
   },
   "dependencies": {
     "@apollo/client": "^3.11.4",
@@ -27,6 +28,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^2.0.5",
     "eslint": "^9.9.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
