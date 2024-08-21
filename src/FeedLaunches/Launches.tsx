@@ -7,7 +7,7 @@ export const Launches = (launches: LaunchConnection) => {
             <h1>Launches</h1>
             <ul className="launches-container">
                 {launches?.launches.length && launches.launches.map((launch: Maybe<Launch>) => {
-                    return (<LaunchComponent key={launch?.id} {...launch} />)
+                    return launch?.id ? (<LaunchComponent key={launch.id} {...launch} />) : <>No launches found</>
                 })
                 }
             </ul>

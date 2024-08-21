@@ -85,7 +85,6 @@ describe('Launches', () => {
         };
         render(<Launches {...launches} />);
         expect(screen.getByText('Launches')).toBeInTheDocument();
-        expect(screen.getByTestId('launch-item-id-')).toBeInTheDocument();
-        expect(screen.getByTestId('launch-item-field-mission-name-')).toBeInTheDocument();
+        expect(screen.getByText('No launches found')).toBeInTheDocument();
     });
 });
