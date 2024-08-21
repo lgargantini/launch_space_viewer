@@ -31,6 +31,7 @@ export default defineConfig({
         '**/*.config.js',
         '**/*.d.ts',
         '**/*.test.tsx',
+        '**/src/data/queries.ts',
       ]
     },
   },
