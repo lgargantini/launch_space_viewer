@@ -1,8 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Feed } from "./Feed";
+import { Feed, GET_LAUNCHES } from "./Feed";
 import { MockedProvider } from "@apollo/client/testing";
-import { GET_LAUNCHES } from "../data/queries";
 
 function scroll(scrollTop: number, offsetHeight: number) {
     const event = new Event('scroll', { bubbles: false });

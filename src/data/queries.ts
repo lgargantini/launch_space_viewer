@@ -1,5 +1,5 @@
-import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
-import { ILaunchRef } from "./types";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { LaunchConnection } from "../graphql/graphql";
 
 export const apolloCache = new InMemoryCache(
   {
@@ -7,7 +7,7 @@ export const apolloCache = new InMemoryCache(
       Query: {
         fields: {
           launches: {
-            read(existing: ILaunchRef[] | undefined) {
+            read(existing: LaunchConnection | undefined) {
               // A read function should always return undefined if existing is
               // undefined. Returning undefined signals that the field is
               // missing from the cache, which instructs Apollo Client to
@@ -17,6 +17,15 @@ export const apolloCache = new InMemoryCache(
             // Don't cache separate results based on
             // any of this field's arguments.
             keyArgs: false,
+            merge(existing: LaunchConnection, incoming: LaunchConnection | undefined) {
+              if (!incoming?.launches?.length) return existing;
+              const newObj = {
+                ...existing,
+                ...incoming,
+              }
+
+              return newObj;
+            },
           }
         }
       }
@@ -27,24 +36,5 @@ export const apolloCache = new InMemoryCache(
 export const apolloClient = new ApolloClient({
   uri: 'https://apollo-fullstack-tutorial.herokuapp.com/graphql',
   cache: apolloCache,
+  devtools: { enabled: true }
 });
-
-export const GET_LAUNCHES = gql`
- query GetLaunches($pageSize: Int, $after: String) {
-  launches (pageSize: $pageSize, after: $after) {
-    launches {
-      id,
-      mission {
-        name
-      }
-      rocket {
-        name
-        type
-      }
-      site
-    }
-    hasMore
-    cursor
-  }
-}
-`;

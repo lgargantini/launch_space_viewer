@@ -1,44 +1,65 @@
-import { useQuery, QueryResult, ApolloError } from "@apollo/client";
+import { useQuery, ApolloError } from "@apollo/client";
 import { Launches } from "./Launches";
-import { GET_LAUNCHES } from "../data/queries";
 import { useEffect, useState } from "react";
-import { ILaunchConnection } from "../data/types";
+import { gql } from "../graphql/gql";
+import { GetLaunchesQuery, LaunchConnection } from "../graphql/graphql";
 
+export const GET_LAUNCHES = gql(/* GraphQL */`
+  query GetLaunches($pageSize: Int, $after: String){
+    launches(pageSize: $pageSize, after: $after) {
+      launches {
+      id,
+      mission {
+        name
+      }
+      rocket {
+        name
+        type
+      }
+      site
+    }
+    hasMore
+    cursor
+  }
+}
+`);
 export const Feed = () => {
-  const { loading, data, error, fetchMore }: QueryResult<{ launches: ILaunchConnection }> = useQuery(GET_LAUNCHES, {
-    variables: {
-      pageSize: 5
-    },
-  });
+  const { loading, data, error, fetchMore } = useQuery(
+    GET_LAUNCHES, { variables: { pageSize: 5 } }
+  );
   const [errorFetchMore, setErrorFetchMore] = useState<ApolloError | undefined>();
 
   useEffect(() => {
-    const onLoadMoreCallback = (launches: ILaunchConnection) => {
+    const onLoadMoreCallback = (previousData: GetLaunchesQuery) => {
       fetchMore({
         variables: {
-          after: String(launches?.cursor),
+          after: String(previousData?.launches.cursor),
         },
-        updateQuery(previousData, { fetchMoreResult }: { fetchMoreResult: { launches: ILaunchConnection } }) {
-          if (!fetchMoreResult) return previousData;
-          const incomingLaunches: ILaunchConnection = fetchMoreResult?.launches ?? { cursor: '', hasMore: false, launches: [] };
+        updateQuery(previousData, options) {
+          if (!options.fetchMoreResult.launches.launches) {
+            return {
+              launches: previousData.launches
+            };
+          }
+          const incomingLaunches = options.fetchMoreResult.launches ?? [];
           // Slicing is necessary because the existing data is
           // immutable, and frozen in development.
-          const mergedLaunches = [...previousData.launches.launches];
+          const mergedLaunches = previousData.launches.launches.slice(0);
 
           for (let i = 0; i < incomingLaunches.launches.length; i++) {
-            if (!mergedLaunches.some((launch) => launch.id === incomingLaunches.launches[i].id)) {
+            if (!mergedLaunches.some((launch) => launch?.id === incomingLaunches?.launches[i]?.id)) {
               mergedLaunches.push(incomingLaunches.launches[i]);
             }
           }
-
-          return {
-            previousData,
+          const newLaunches = {
             launches: {
               cursor: incomingLaunches.cursor,
               hasMore: incomingLaunches.hasMore,
-              launches: incomingLaunches ? mergedLaunches : [],
+              launches: mergedLaunches ? mergedLaunches : [],
             }
           };
+
+          return newLaunches;
         },
       }).catch((e) => {
         setErrorFetchMore(e as ApolloError);
@@ -51,7 +72,7 @@ export const Feed = () => {
         scrollHeight //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
       } = document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight - 20 && data?.launches.hasMore) {
-        onLoadMoreCallback(data?.launches);
+        onLoadMoreCallback(data);
       }
     };
 
@@ -61,7 +82,7 @@ export const Feed = () => {
     };
   }, [data, fetchMore]);
 
-  const launches: ILaunchConnection | undefined = data?.launches;
+  const launches = data?.launches as LaunchConnection;
 
   if (error) return <p>Error : {error.message}</p>;
   if (errorFetchMore) return <p>Error fetching more launches: {errorFetchMore.message}</p>;
@@ -70,7 +91,7 @@ export const Feed = () => {
 
   return (
     <Launches
-      entries={launches?.launches || []}
+      {...launches}
     />
   );
 }

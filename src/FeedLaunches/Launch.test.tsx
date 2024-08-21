@@ -1,25 +1,27 @@
 import { describe, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Launch from './Launch';
-import { ILaunch } from "../data/types";
+import { Launch } from '../graphql/graphql';
+import LaunchComponent from './Launch';
 
 describe('Launch', () => {
     test("renders component with valid data", () => {
         //create test for Launch component
 
-        const entry: ILaunch = {
+        const entry: Launch = {
             id: '1',
             mission: {
                 name: 'mission 1'
             },
             rocket: {
+                id: '1',
                 name: 'rocket 1',
                 type: 'type 1'
             },
+            isBooked: false,
             site: 'site 1'
         };
 
-        render(<Launch {...entry} />);
+        render(<LaunchComponent {...entry} />);
         expect(screen.getByTestId('launch-item-id-1')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-id-1')).toHaveTextContent('ID: 1');
 
@@ -35,19 +37,21 @@ describe('Launch', () => {
     });
 
     test("renders component with empty data", () => {
-        const entry: ILaunch = {
+        const entry: Launch = {
             id: '',
             mission: {
                 name: ''
             },
             rocket: {
+                id: '',
                 name: '',
                 type: ''
             },
+            isBooked: false,
             site: ''
         };
 
-        render(<Launch {...entry} />);
+        render(<LaunchComponent {...entry} />);
         expect(screen.getByTestId('launch-item-id-')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-field-mission-name-')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-field-rocket-description-')).toBeInTheDocument();

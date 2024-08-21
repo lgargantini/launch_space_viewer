@@ -1,16 +1,15 @@
-import { ILaunch } from "../data/types";
-import Launch from "./Launch";
+import { Launch, LaunchConnection, Maybe } from "../graphql/graphql";
+import LaunchComponent from "./Launch"
 
-export interface ILaunches {
-    entries: ILaunch[];
-}
-
-export const Launches = ({ entries }: ILaunches) => {
+export const Launches = (launches: LaunchConnection) => {
     return (
         <div>
             <h1>Launches</h1>
             <ul className="launches-container">
-                {entries.map((entry: ILaunch) => <Launch key={entry.id} {...entry} />)}
+                {launches?.launches.length && launches.launches.map((launch: Maybe<Launch>) => {
+                    return (<LaunchComponent key={launch?.id} {...launch} />)
+                })
+                }
             </ul>
         </div>
     );

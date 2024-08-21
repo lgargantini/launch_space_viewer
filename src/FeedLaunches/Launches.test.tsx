@@ -1,22 +1,28 @@
 import { describe, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Launches } from './Launches';
+import { LaunchConnection } from '../graphql/graphql';
 
 describe('Launches', () => {
     test("renders component with valid data", () => {
         //create test for Launches component
 
-        const entries = [
+        const launches: LaunchConnection = {
+            cursor: "1",
+            hasMore: false,
+            launches: [
             {
                 id: '1',
                 mission: {
                     name: 'mission 1'
                 },
                 rocket: {
+                    id: '1',
                     name: 'rocket 1',
                     type: 'type 1'
                 },
-                site: 'site 1'
+                    site: 'site 1',
+                    isBooked: false,
             },
             {
                 id: '2',
@@ -24,14 +30,17 @@ describe('Launches', () => {
                     name: 'mission 2'
                 },
                 rocket: {
+                    id: '2',
                     name: 'rocket 2',
                     type: 'type 2'
                 },
-                site: 'site 2'
+                site: 'site 2',
+                isBooked: false,
             }
-        ];
+            ]
+        };
 
-        render(<Launches entries={entries} />);
+        render(<Launches {...launches} />);
         expect(screen.getByText('Launches')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-id-1')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-id-1')).toHaveTextContent('ID: 1');
@@ -55,20 +64,26 @@ describe('Launches', () => {
     });
 
     test("renders component with empty data", () => {
-        const entries = [
+        const launches: LaunchConnection = {
+            cursor: '1',
+            hasMore: false,
+            launches: [
             {
                 id: '',
                 mission: {
                     name: ''
                 },
                 rocket: {
+                    id: '',
                     name: '',
                     type: ''
                 },
-                site: ''
+                    site: '',
+                    isBooked: false,
             }
-        ];
-        render(<Launches entries={entries} />);
+            ]
+        };
+        render(<Launches {...launches} />);
         expect(screen.getByText('Launches')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-id-')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-field-mission-name-')).toBeInTheDocument();
