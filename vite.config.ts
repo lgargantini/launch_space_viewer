@@ -16,22 +16,13 @@ export default defineConfig({
     css: false,
     exclude: [
       '**/dist/**',
-      '**/src/graphql/**',
       '**/node_modules/**',
-      '**/src/graphql/**',
     ],
     coverage: {
       exclude: [
         '**/dist/**',
-        '**/src/graphql/**',
         '**/node_modules/**',
         '**/src/codegen.ts',
-        '**/src/main.tsx',
-        '**/*.config.ts',
-        '**/*.config.js',
-        '**/*.d.ts',
-        '**/*.test.tsx',
-        '**/src/data/queries.ts',
       ]
     },
   },
