@@ -1,90 +1,89 @@
 # Launch Space App
 
-This app is intended as PoC running several technologies simultaneously, display most updated backend structures, keeping both synchronized, and force adjustments whenever a change ocurrs on both sides. 
+This is a well-structured guide for running the Space App Proof of Concept (PoC). Here's a concise breakdown of the steps and commands:
 
-This approach to render information give us a good way of vigilance on critical information, that will, at some point, be displayed to regular users. It has some downsides, that needs to be considered and discussed, before taking action. Consider how often information on the backend changes, and how those changes will impact your current structure.
+## Installation and Setup
+### Install Dependencies
 
-
-## How to run it?
-
-Example using NPM (review `man npm` for more information)
-
-### Install dependencies
-```
+Run the following command to install all necessary dependencies:
+```bash
 npm install
 ```
 
-After installing dependencies, you might consider checking Available Script Section. 
+After dependency installation, explore the available scripts to understand the different operations you can perform during development, testing, and production.
 
 ### Available Scripts
 
 #### Development
-
-- `dev`: Starts the development server.
-
+Start the Development Server
+Run the following command to start the server in development mode:
+```bash
+npm run dev
+```
 #### Build
+Build for Production
+Use the following command to build the app for production:
+```bash
+npm run build
+```
+#### Testing (Unit Tests with Vitest)
+Run the Test Suite
 
-- `build`: Builds the app for production.
+Run this command to execute all unit tests:
+```
+npm run test
+```
+##### Run Tests without Watch Mode
 
-#### Testing ( Unit Tests - Vitest - https://vitest.dev/)
-- `test`: Runs the test suite.
+If you want to run tests without continuously watching for changes, use:
+```
+npm run test:no-watch
+```
+##### Run Tests with Coverage Report
 
-##### Variation No Watch
-
-- `test:no-watch`: Runs the test suite without watch mode.
-
-##### Variation Coverage
-
-- `test:coverage`: Runs tests and generates a coverage report.
-
-#### Linter ( ESlint - https://eslint.org/ )
-
-- `lint`: Lints the codebase.
-
-#### Preview ( Production )
-
-- `preview`: Previews the production build.
-
+To generate a coverage report after running tests, use:
+```
+npm run test:coverage
+```
+#### Linting (ESLint)
+Lint the Codebase
+Run this command to lint your code:
+```
+npm run lint
+```
+#### Preview
+Preview Production Build
+To preview the app as it would look in production, use:
+```
+npm run preview
+```
 #### Prepare
-
-- `prepare`: Sets up Husky for Git hooks.
-
-#### Pre Commit
-
-- `pre-commit`: Runs linting, tests, and coverage before committing.
-
-#### Generate - Note: this will update your backend schema ( Codegen - https://the-guild.dev/graphql/codegen, visit for more information )
-
-- `generate`: Generates code from GraphQL schema.
-
-Please make sure `src/codegen.ts` exists, I'll share an example of how looks:
-
+Set Up Husky for Git Hooks
+This command sets up Husky for managing Git hooks:
 ```
-const config: CodegenConfig = {
-    schema: 'YOUR_URL_SERVICE',
-    documents: ['src/**/*.tsx'],
-    generates: {
-        './src/graphql/': {
-            preset: 'client',
-            presetConfig: {
-                gqlTagName: "gql",
-            }
-        },
-        './schema.graphql': {
-            plugins: ['schema-ast'],
-            config: {
-                includeDirectives: true
-            }
-        }
-    },
-    ignoreNoDocuments: true
-}
-
-export default config
+npm run prepare
 ```
-
-As you can see on the  `generates` config section, it will attempt to create different outputs files:
- - Schema GraphQL (file: `'./schema.graphql'`): Observe this file to be aware of how your backend structure is created. Create validations to tests each Object generated, discuss how important is for your application.
- - GraphQL folder (folder: `'./src/graphql/'`): Consider taking a look on each file, as it might help you later, mainly when you attempt to use the generated information from `React.JS` pages.
-
+#### Pre-Commit Hook
+Run Linting, Tests, and Coverage Before Committing.
  
+This command ensures code quality by running linting, tests, and coverage checks before committing:
+```
+npm run pre-commit
+```
+
+#### Generate (Update Backend Schema)
+Generate Code from GraphQL Schema.
+
+This command updates your backend schema using Codegen:
+```
+npm run generate
+```
+
+Codegen - https://the-guild.dev/graphql/codegen
+
+#### Additional Notes
+Visit the docs folder for detailed configurations and project documentation.
+
+### Considerations:
+
+Since this app synchronizes backend structures with the frontend, discuss how often backend changes might occur and the impact on the current structure before proceeding.
