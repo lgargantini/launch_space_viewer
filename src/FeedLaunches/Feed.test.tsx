@@ -274,7 +274,7 @@ describe('Feed', () => {
                         after: ''
                     }
                 },
-                error: new Error("An error occurred")
+                error: new Error("A fetch more error occurred")
             }
         ];
 
@@ -309,6 +309,6 @@ describe('Feed', () => {
         scroll(200, 100); // scroll to bottom
 
         //fails with error
-        expect(await screen.findByText("Error fetching more launches: An error occurred")).toBeInTheDocument();
+        expect(await screen.findByText("Error : A fetch more error occurred")).toBeInTheDocument();
     });
 });

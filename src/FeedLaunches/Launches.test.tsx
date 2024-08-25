@@ -40,7 +40,7 @@ describe('Launches', () => {
             ]
         };
 
-        render(<Launches {...launches} />);
+        render(<Launches launches={launches} />);
         expect(screen.getByText('Launches')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-id-1')).toBeInTheDocument();
         expect(screen.getByTestId('launch-item-id-1')).toHaveTextContent('ID: 1');
@@ -83,7 +83,7 @@ describe('Launches', () => {
             }
             ]
         };
-        render(<Launches {...launches} />);
+        render(<Launches launches={launches} />);
         expect(screen.getByText('Launches')).toBeInTheDocument();
         expect(screen.getByText('No launches found')).toBeInTheDocument();
     });

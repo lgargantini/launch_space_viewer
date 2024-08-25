@@ -3,6 +3,7 @@ import { Launches } from "./Launches";
 import { useEffect, useState } from "react";
 import { gql } from "../graphql/gql";
 import { GetLaunchesQuery, LaunchConnection } from "../graphql/graphql";
+import { ErrorComponent } from "./Error";
 
 export const GET_LAUNCHES = gql(/* GraphQL */`
   query GetLaunches($pageSize: Int, $after: String){
@@ -24,7 +25,7 @@ export const GET_LAUNCHES = gql(/* GraphQL */`
 }
 `);
 export const Feed = () => {
-  const { loading, data, error, fetchMore } = useQuery(
+  const { loading, data, error: errorQuery, fetchMore } = useQuery(
     GET_LAUNCHES, { variables: { pageSize: 5 } }
   );
   const [errorFetchMore, setErrorFetchMore] = useState<ApolloError | undefined>();
@@ -84,14 +85,13 @@ export const Feed = () => {
 
   const launches = data?.launches as LaunchConnection;
 
-  if (error) return <p>Error : {error.message}</p>;
-  if (errorFetchMore) return <p>Error fetching more launches: {errorFetchMore.message}</p>;
-
+  if (errorQuery) return <ErrorComponent error={errorQuery} />;
   if (loading) return 'Loading...';
 
   return (
     <Launches
-      {...launches}
+      launches={launches}
+      error={errorFetchMore}
     />
   );
 }

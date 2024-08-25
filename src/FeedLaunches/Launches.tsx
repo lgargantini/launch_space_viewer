@@ -1,7 +1,14 @@
+import { ApolloError } from "@apollo/client";
 import { Launch, LaunchConnection, Maybe } from "../graphql/graphql";
 import LaunchComponent from "./Launch"
+import { ErrorComponent } from "./Error";
 
-export const Launches = (launches: LaunchConnection) => {
+interface ILaunches {
+    launches: LaunchConnection;
+    error?: ApolloError;
+}
+
+export const Launches = ({ launches, error }: ILaunches) => {
     return (
         <div>
             <h1>Launches</h1>
@@ -11,6 +18,7 @@ export const Launches = (launches: LaunchConnection) => {
                 })
                 }
             </ul>
+            {error && <ErrorComponent error={error} />}
         </div>
     );
 };
