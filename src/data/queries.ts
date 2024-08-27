@@ -18,7 +18,7 @@ export const apolloCache = new InMemoryCache(
             // any of this field's arguments.
             keyArgs: false,
             merge(existing: LaunchConnection, incoming: LaunchConnection | undefined) {
-              if (!incoming?.launches?.length) return existing;
+              if (!incoming?.launches.length) return existing;
               const newObj = {
                 ...existing,
                 ...incoming,

@@ -34,21 +34,21 @@ export const Feed = () => {
     const onLoadMoreCallback = (previousData: GetLaunchesQuery) => {
       fetchMore({
         variables: {
-          after: String(previousData?.launches.cursor),
+          after: String(previousData.launches.cursor),
         },
         updateQuery(previousData, options) {
-          if (!options.fetchMoreResult.launches.launches) {
+          if (!options.fetchMoreResult.launches.launches.length) {
             return {
               launches: previousData.launches
             };
           }
-          const incomingLaunches = options.fetchMoreResult.launches ?? [];
+          const incomingLaunches = options.fetchMoreResult.launches as LaunchConnection;
           // Slicing is necessary because the existing data is
           // immutable, and frozen in development.
           const mergedLaunches = previousData.launches.launches.slice(0);
 
           for (let i = 0; i < incomingLaunches.launches.length; i++) {
-            if (!mergedLaunches.some((launch) => launch?.id === incomingLaunches?.launches[i]?.id)) {
+            if (!mergedLaunches.some((launch) => launch?.id === incomingLaunches.launches[i]?.id)) {
               mergedLaunches.push(incomingLaunches.launches[i]);
             }
           }
@@ -56,13 +56,13 @@ export const Feed = () => {
             launches: {
               cursor: incomingLaunches.cursor,
               hasMore: incomingLaunches.hasMore,
-              launches: mergedLaunches ? mergedLaunches : [],
+              launches: mergedLaunches,
             }
           };
 
           return newLaunches;
         },
-      }).catch((e) => {
+      }).catch((e: unknown) => {
         setErrorFetchMore(e as ApolloError);
       });
     };
